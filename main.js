@@ -319,14 +319,14 @@ function timerTick () {
 }
 
 function keyDown (e) {
-	toggleInput(e.keyCode, true);
+	toggleKeyInput(e.keyCode, true);
 }
 
 function keyUp (e) {
-	toggleInput(e.keyCode, false);
+	toggleKeyInput(e.keyCode, false);
 }
 
-function toggleInput (key, bool) {
+function toggleKeyInput (key, bool) {
 	switch (key) {
 		case 13:	// Enter
 			break;
