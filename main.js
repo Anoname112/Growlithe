@@ -280,14 +280,14 @@ function timerTick () {
 		// Generate hurdles
 		if (hurdleDelay1 > 0) {
 			if (hurdleDelay2 == 0) {
-				if (attemptHurdleGeneration()) hurdleDelay2 = 2;
+				if (attemptHurdleGeneration()) hurdleDelay2 = hurdleDelay;
 			}
 			else hurdleDelay2--;
 			hurdleDelay1--;
 		}
 		else {
 			if (hurdleDelay2 == 0) {
-				if (attemptHurdleGeneration()) hurdleDelay1 = 2;
+				if (attemptHurdleGeneration()) hurdleDelay1 = hurdleDelay;
 			}
 			else hurdleDelay2--;
 		}
