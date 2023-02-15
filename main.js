@@ -16,6 +16,8 @@ var imgRock = newImg("resources/rock.png");
 var imgVoltrobLeft = newImg("resources/voltrob_left.png");
 var imgVoltrobRight = newImg("resources/voltrob_right.png");
 var imgControl = newImg("resources/control.png");
+var playerImages;
+var voltrobImages;
 
 var invincibleTime;
 var gameSpeed;
@@ -24,19 +26,17 @@ var playerLocation;
 var bushes;
 var rocks;
 var voltrobs;
-var playerImages;
-var voltrobImages;
 var hurdleDelay1;
 var hurdleDelay2;
 var hits;
 var score;
 
 // inputs
-var inputUp;
-var inputDown;
-var inputX;
-var screenInputUp;
-var screenInputDown;
+var inputKeyUp;
+var inputKeyDown;
+var inputKeyX;
+var inputMouseUp;
+var inputMouseDown;
 
 function updateCanvasLocation () {
 	canvas.style.left = (window.innerWidth - canvas.width) / 2;
@@ -225,8 +225,8 @@ function timerTick () {
 	}
 	
 	// Input processing
-	if ((inputUp || screenInputUp) && playerLocation.y > tileSize * (laneY + 1)) playerLocation.y -= scaling * gameSpeed / 2;
-	if ((inputDown || screenInputDown) && playerLocation.y < tileSize * (laneY + laneCount)) playerLocation.y += scaling * gameSpeed / 2;
+	if ((inputKeyUp || inputMouseUp) && playerLocation.y > tileSize * (laneY + 1)) playerLocation.y -= scaling * gameSpeed / 2;
+	if ((inputKeyDown || inputMouseDown) && playerLocation.y < tileSize * (laneY + laneCount)) playerLocation.y += scaling * gameSpeed / 2;
 	
 	// Collision check
 	if (invincibleTime == 0) {
@@ -331,13 +331,13 @@ function toggleInput (key, bool) {
 		case 13:	// Enter
 			break;
 		case 38:	// Up
-			inputUp = bool;
+			inputKeyUp = bool;
 			break;
 		case 40:	// Down
-			inputDown = bool;
+			inputKeyDown = bool;
 			break;
 		case 88:	// X
-			inputX = bool;
+			inputKeyX = bool;
 			break;
 		default:
 			break;
@@ -345,22 +345,22 @@ function toggleInput (key, bool) {
 }
 
 function mouseDown (e) {
-	if (e.offsetY < imgControl.height * scaling / 2) screenInputUp = true;
-	else screenInputDown = true;
+	if (e.offsetY < imgControl.height * scaling / 2) inputMouseUp = true;
+	else inputMouseDown = true;
 }
 
 function mouseUp (e) {
-	screenInputUp = screenInputDown = false;
+	inputMouseUp = inputMouseDown = false;
 }
 
 function touchStart (e) {
 	var controlCanvasY = e.touches[0].pageY;
-	if (controlCanvasY < window.innerHeight / 2) screenInputUp = true;
-	else screenInputDown = true;
+	if (controlCanvasY < window.innerHeight / 2) inputMouseUp = true;
+	else inputMouseDown = true;
 }
 
 function touchEnd (e) {
-	screenInputUp = screenInputDown = false;
+	inputMouseUp = inputMouseDown = false;
 }
 
 
