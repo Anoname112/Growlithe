@@ -3,7 +3,7 @@ const isPortrait = window.innerWidth < window.innerHeight;
 
 const interval = 10;
 const gSpeed = 3;
-const scaling = isMobile ? 2 : 3;
+const scaling = isMobile ? 1 : 3;
 const tileSize = 16 * scaling;
 const tileWidth = 11;
 const tileHeight = 8;
