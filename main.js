@@ -411,7 +411,7 @@ function toggleKeyInput (key, bool) {
 	}
 }
 
-function onMouseDown (e) {
+function onMouseUp (e) {
 	if (win) restartGame();
 }
 
@@ -424,7 +424,7 @@ function onResize () {
 window.onload = function () {
 	window.onkeydown = onKeyDown;
 	window.onkeyup = onKeyUp;
-	window.onmousedown = onMouseDown;
+	window.onmouseup = onMouseUp;
 	window.onresize = onResize;
 	
 	init();

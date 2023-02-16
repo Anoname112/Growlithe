@@ -11,7 +11,7 @@ const invinTime = 80;
 const bushGenerationRate = 0.2;
 const hurdleGenerationRate = 0.2;
 const hitPenalty = 300;
-const winScore = 100;
+const winScore = 1200;
 
 const bodyBackColor = "#222";
 const bodyTextColor = "#000";
