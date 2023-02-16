@@ -350,7 +350,9 @@ function timerTick () {
 			
 			var youWinX = (canvasWidth - imgYouWin.width) / 2;
 			var youWinY = (canvasHeight - imgYouWin.height) / 2;
-			drawImage(imgYouWin, youWinX, youWinY);
+			var youWinWidth = imgYouWin.width * pcScaling / mobileScaling;
+			var youWinHeight = imgYouWin.height * pcScaling / mobileScaling;
+			drawImage(imgYouWin, youWinX, youWinY, youWinWidth, youWinHeight);
 		}
 		
 		// Update game stats
