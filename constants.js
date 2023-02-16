@@ -1,6 +1,5 @@
-const interval = 30;
-
-const gSpeed = 4;
+const interval = 10;
+const gSpeed = 3;
 const scaling = 3;
 const tileSize = 16 * scaling;
 const tileWidth = 11;
@@ -10,8 +9,8 @@ const laneCount = 3;
 const invinTime = 80;
 const bushGenerationRate = 0.2;
 const hurdleGenerationRate = 0.2;
-const hitPenalty = 300;
-const winScore = 1200;
+const hitPenalty = 500;
+const winScore = 2000;
 
 const bodyBackColor = "#222";
 const bodyTextColor = "#000";

@@ -136,7 +136,7 @@ function init () {
 			if (!images[i].complete) contentLoaded = false;
 		}
 		if (contentLoaded) {
-			requestAnimationFrame(timerTick);
+			setInterval(timerTick, interval);
 		}
 	}
 }
@@ -232,7 +232,6 @@ function initGame () {
 
 function restartGame () {
 	initGame();
-	requestAnimationFrame(timerTick);
 }
 
 function timerTick () {
@@ -359,8 +358,6 @@ function timerTick () {
 		if (win) string += gameStatsSeparator + "Press Enter to restart";
 		gameStats.innerHTML = string;
 	}
-	
-	requestAnimationFrame(timerTick);
 }
 
 function arrowUpMouseDown (e) {
