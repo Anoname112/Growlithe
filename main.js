@@ -350,8 +350,8 @@ function timerTick () {
 			
 			var youWinX = (canvasWidth - imgYouWin.width) / 2;
 			var youWinY = (canvasHeight - imgYouWin.height) / 2;
-			var youWinWidth = imgYouWin.width * pcScaling / mobileScaling;
-			var youWinHeight = imgYouWin.height * pcScaling / mobileScaling;
+			var youWinWidth = imgYouWin.width * mobileScaling / pcScaling;
+			var youWinHeight = imgYouWin.height * mobileScaling / pcScaling;
 			drawImage(imgYouWin, youWinX, youWinY, youWinWidth, youWinHeight);
 		}
 		
