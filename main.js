@@ -126,7 +126,7 @@ function init () {
 	initGame();
 	
 	start = false;
-	message = "CLICK TO START PLAYING";
+	message = "CLICK OR PRESS ENTER TO START PLAYING";
 	drawMessage(message, (canvas.width - (message.length * 8)) / 2, (canvas.height - bodyFontSize) / 2);
 	
 	var contentLoaded = false;
@@ -387,7 +387,10 @@ function touchStart (e) {
 
 function touchEnd (e) {
 	inputMouseUp = inputMouseDown = false;
-	if (!start) start = true;
+	if (!start) {
+		start = true;
+		bgm.play();
+	}
 	if (win) restartGame();
 }
 
@@ -402,7 +405,10 @@ function onKeyUp (e) {
 function toggleKeyInput (key, bool) {
 	switch (key) {
 		case 13:	// Enter
-			if (!start) start = true;
+			if (!start) {
+				start = true;
+				bgm.play();
+			}
 			if (win) restartGame();
 			break;
 		case 38:	// Up
@@ -419,7 +425,10 @@ function toggleKeyInput (key, bool) {
 }
 
 function onMouseUp (e) {
-	if (!start) start = true;
+	if (!start) {
+		start = true;
+		bgm.play();
+	}
 	if (win) restartGame();
 }
 
