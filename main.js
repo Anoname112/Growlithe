@@ -348,10 +348,10 @@ function timerTick () {
 			fillRect(0, 0, canvasWidth, canvasHeight);
 			context.globalAlpha = 1.0;
 			
-			var youWinX = (canvasWidth - imgYouWin.width) / 2;
-			var youWinY = (canvasHeight - imgYouWin.height) / 2;
 			var youWinWidth = imgYouWin.width * mobileScaling / pcScaling;
 			var youWinHeight = imgYouWin.height * mobileScaling / pcScaling;
+			var youWinX = (canvasWidth - youWinWidth) / 2;
+			var youWinY = (canvasHeight - youWinHeight) / 2;
 			drawImage(imgYouWin, youWinX, youWinY, youWinWidth, youWinHeight);
 		}
 		
