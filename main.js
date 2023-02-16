@@ -16,6 +16,7 @@ var imgRock = newImg("resources/rock.png");
 var imgVoltrobLeft = newImg("resources/voltrob_left.png");
 var imgVoltrobRight = newImg("resources/voltrob_right.png");
 var imgControl = newImg("resources/control.png");
+var imgYouWin = newImg("resources/you_win.png");
 var playerImages;
 var voltrobImages;
 
@@ -30,6 +31,7 @@ var hurdleDelay1;
 var hurdleDelay2;
 var hits;
 var score;
+var win;
 
 // inputs
 var inputKeyUp;
@@ -60,10 +62,21 @@ function newImg (path) {
 	return tempImg;
 }
 
+function fillRect (x, y, w, h, s) {
+	context.fillStyle = s == null ? "#000" : s;
+	context.fillRect(x, y, w, h);
+}
+
 function drawImage (img, x, y, w, h) {
 	w = (w == null) ? img.width : w;
 	h = (h == null) ? img.height : h;
 	context.drawImage(img, x, y, w, h);
+}
+
+function drawMessage (msg, x, y) {
+	context.font = bodyFont;
+	context.fillStyle = "#000";
+	context.fillText(msg, x, y + bodyFontSize);
 }
 
 function playAudio (audio) {
@@ -116,7 +129,7 @@ function init () {
 			if (!images[i].complete) contentLoaded = false;
 		}
 		if (contentLoaded) {
-			controlContext.drawImage(imgControl, 0, 0, imgControl.width * scaling, imgControl.height * scaling);
+			//controlContext.drawImage(imgControl, 0, 0, imgControl.width, imgControl.height);
 			requestAnimationFrame(timerTick);
 		}
 	}
@@ -139,15 +152,18 @@ function initDocument () {
 	context = canvas.getContext("2d");
 	context.imageSmoothingEnabled = false;
 	
-	control = document.getElementById("controlCanvas");
+	control = document.getElementById("control");
 	control.onmousedown = mouseDown;
 	control.onmouseup = mouseUp;
 	control.style.position = controlPosition;
 	control.width = controlWidth;
 	control.height = controlHeight;
 	updateControlLocation();
-	controlContext = control.getContext("2d");
-	controlContext.imageSmoothingEnabled = true;
+	//controlContext = control.getContext("2d");
+	//controlContext.imageSmoothingEnabled = true;
+	
+	document.getElementById("arrowUp").innerHTML = arrowUpSvg;
+	document.getElementById("arrowDown").innerHTML = arrowDownSvg;
 	
 	gameStats = document.getElementById("gameStats");
 	gameStats.style.padding = gameStatsPadding;
@@ -172,6 +188,7 @@ function initDocument () {
 }
 
 function initGame () {
+	win = false;
 	hits = 0;
 	score = 0;
 	invincibleTime = invinTime * 0.75;
@@ -205,117 +222,131 @@ function initGame () {
 }
 
 function timerTick () {
-	// Game movements
-	if (invincibleTime > 0) invincibleTime--;
-	else score += 1;
-	backgroundMovement = (backgroundMovement + gameSpeed) % (tileSize * 2);
-	for (var i = 0; i < bushes.length; i++) bushes[i].X += gameSpeed;
-	for (var i = 0; i < rocks.length; i++) rocks[i].X += gameSpeed;
-	for (var i = 0; i < voltrobs.length; i++) {
-		voltrobs[i].X += gameSpeed;
-		if (voltrobs[i].Y <= (laneY - 1) * tileSize) {
-			voltrobs[i].Y = (laneY - 1) * tileSize;
-			voltrobs[i].Direction = 1;
+	if (!win) {
+		// Game movements
+		if (invincibleTime > 0) invincibleTime--;
+		else score += 1;
+		if (score == winScore) win = true;
+		backgroundMovement = (backgroundMovement + gameSpeed) % (tileSize * 2);
+		for (var i = 0; i < bushes.length; i++) bushes[i].X += gameSpeed;
+		for (var i = 0; i < rocks.length; i++) rocks[i].X += gameSpeed;
+		for (var i = 0; i < voltrobs.length; i++) {
+			voltrobs[i].X += gameSpeed;
+			if (voltrobs[i].Y <= (laneY - 1) * tileSize) {
+				voltrobs[i].Y = (laneY - 1) * tileSize;
+				voltrobs[i].Direction = 1;
+			}
+			else if (voltrobs[i].Y >= (laneY + laneCount) * tileSize) {
+				voltrobs[i].Y = (laneY + laneCount) * tileSize;
+				voltrobs[i].Direction = -1;
+			}
+			voltrobs[i].Y += gameSpeed / 2 * voltrobs[i].Direction;
 		}
-		else if (voltrobs[i].Y >= (laneY + laneCount) * tileSize) {
-			voltrobs[i].Y = (laneY + laneCount) * tileSize;
-			voltrobs[i].Direction = -1;
-		}
-		voltrobs[i].Y += gameSpeed / 2 * voltrobs[i].Direction;
-	}
-	
-	// Input processing
-	if ((inputKeyUp || inputMouseUp) && playerLocation.y > tileSize * (laneY + 1)) playerLocation.y -= scaling * gameSpeed / 2;
-	if ((inputKeyDown || inputMouseDown) && playerLocation.y < tileSize * (laneY + laneCount)) playerLocation.y += scaling * gameSpeed / 2;
-	
-	// Collision check
-	if (invincibleTime == 0) {
-		for (var i = playerLocation.x + (imgStand.width / 4 * scaling); i < playerLocation.x + (imgStand.width * 2 / 3 * scaling); i++) {
-			for (var j = playerLocation.y - 1; j >= playerLocation.y - (imgStand.height / 2 * scaling); j--) {
-				// Collision with rocks
-				for (var k = 0; k < rocks.length; k++) {
-					if (i >= rocks[k].X && i < rocks[k].X + imgRock.width * scaling &&
-						j >= rocks[k].Y && j < rocks[k].Y + imgRock.height * scaling) {
-						invincibleTime = invinTime;
-						hits++;
-						score -= hitPenalty;
-						if (score < 0) score = 0;
-						playAudio(cry);
-						break;
+		
+		// Input processing
+		if ((inputKeyUp || inputMouseUp) && playerLocation.y > tileSize * (laneY + 1)) playerLocation.y -= scaling * gameSpeed / 2;
+		if ((inputKeyDown || inputMouseDown) && playerLocation.y < tileSize * (laneY + laneCount)) playerLocation.y += scaling * gameSpeed / 2;
+		
+		// Collision check
+		if (invincibleTime == 0) {
+			for (var i = playerLocation.x + (imgStand.width / 4 * scaling); i < playerLocation.x + (imgStand.width * 2 / 3 * scaling); i++) {
+				for (var j = playerLocation.y - 1; j >= playerLocation.y - (imgStand.height / 2 * scaling); j--) {
+					// Collision with rocks
+					for (var k = 0; k < rocks.length; k++) {
+						if (i >= rocks[k].X && i < rocks[k].X + imgRock.width * scaling &&
+							j >= rocks[k].Y && j < rocks[k].Y + imgRock.height * scaling) {
+							invincibleTime = invinTime;
+							hits++;
+							score -= hitPenalty;
+							if (score < 0) score = 0;
+							playAudio(cry);
+							break;
+						}
 					}
-				}
-				// Collision with voltrobs
-				for (var k = 0; k < voltrobs.length; k++) {
-					if (i >= voltrobs[k].X && i < voltrobs[k].X + imgVoltrobLeft.width * scaling &&
-						j >= voltrobs[k].Y && j < voltrobs[k].Y + imgVoltrobLeft.height * scaling) {
-						invincibleTime = invinTime;
-						hits++;
-						score -= hitPenalty;
-						if (score < 0) score = 0;
-						playAudio(cry);
-						break;
+					// Collision with voltrobs
+					for (var k = 0; k < voltrobs.length; k++) {
+						if (i >= voltrobs[k].X && i < voltrobs[k].X + imgVoltrobLeft.width * scaling &&
+							j >= voltrobs[k].Y && j < voltrobs[k].Y + imgVoltrobLeft.height * scaling) {
+							invincibleTime = invinTime;
+							hits++;
+							score -= hitPenalty;
+							if (score < 0) score = 0;
+							playAudio(cry);
+							break;
+						}
 					}
+					if (invincibleTime > 0) break;
 				}
 				if (invincibleTime > 0) break;
 			}
-			if (invincibleTime > 0) break;
 		}
-	}
-	
-	
-	// Delete objects
-	for (var i = 0; i < bushes.length; i++) if (bushes[i].X > canvasWidth) bushes.splice(i, 1);
-	for (var i = 0; i < rocks.length; i++) if (rocks[i].X > canvasWidth) rocks.splice(i, 1);
-	for (var i = 0; i < voltrobs.length; i++) if (voltrobs[i].X > canvasWidth) voltrobs.splice(i, 1);
-	
-	// Generate objects
-	if (backgroundMovement % tileSize == 0) {
-		// Generate bushes
-		for (var i = 0; i < tileHeight; i++) {
-			if (i < laneY - 1 || i > (laneY + laneCount)) {
-				if (Math.random() < bushGenerationRate) bushes.push(new Object(-2, i));
+		
+		
+		// Delete objects
+		for (var i = 0; i < bushes.length; i++) if (bushes[i].X > canvasWidth) bushes.splice(i, 1);
+		for (var i = 0; i < rocks.length; i++) if (rocks[i].X > canvasWidth) rocks.splice(i, 1);
+		for (var i = 0; i < voltrobs.length; i++) if (voltrobs[i].X > canvasWidth) voltrobs.splice(i, 1);
+		
+		// Generate objects
+		if (backgroundMovement % tileSize == 0) {
+			// Generate bushes
+			for (var i = 0; i < tileHeight; i++) {
+				if (i < laneY - 1 || i > (laneY + laneCount)) {
+					if (Math.random() < bushGenerationRate) bushes.push(new Object(-2, i));
+				}
+			}
+			
+			// Generate hurdles
+			if (hurdleDelay1 > 0) {
+				if (hurdleDelay2 == 0) {
+					if (attemptHurdleGeneration()) hurdleDelay2 = 2;
+				}
+				else hurdleDelay2--;
+				hurdleDelay1--;
+			}
+			else {
+				if (hurdleDelay2 == 0) {
+					if (attemptHurdleGeneration()) hurdleDelay1 = 2;
+				}
+				else hurdleDelay2--;
 			}
 		}
 		
-		// Generate hurdles
-		if (hurdleDelay1 > 0) {
-			if (hurdleDelay2 == 0) {
-				if (attemptHurdleGeneration()) hurdleDelay2 = hurdleDelay;
-			}
-			else hurdleDelay2--;
-			hurdleDelay1--;
+		// Drawing
+		var backgroundX = backgroundMovement - (tileSize * 2);
+		var backgroundWidth = imgBackground.width * scaling;
+		var backgroundHeight = imgBackground.height * scaling;
+		var playerImageDirectory = (invincibleTime > invinTime * 0.75) ? 4 : parseInt((backgroundMovement % tileSize) / (tileSize / (playerImages.length - 1)));
+		var playerY = playerLocation.y - (playerImages[playerImageDirectory].height * scaling);
+		var playerWidth = playerImages[playerImageDirectory].width * scaling;
+		var playerHeight = playerImages[playerImageDirectory].height * scaling;
+		var voltrobImageDirectory = parseInt((backgroundMovement % tileSize) / (tileSize / voltrobImages.length));
+		drawImage(imgBackground, backgroundX, 0, backgroundWidth, backgroundHeight);
+		for (var i = 0; i < bushes.length; i++) drawImage(imgBush, bushes[i].X, bushes[i].Y, imgBush.width * scaling, imgBush.height * scaling);
+		for (var i = 0; i < rocks.length; i++) drawImage(imgRock, rocks[i].X, rocks[i].Y, imgRock.width * scaling, imgRock.height * scaling);
+		for (var i = 0; i < voltrobs.length; i++) {
+			var width = voltrobImages[voltrobImageDirectory].width * scaling;
+			var height = voltrobImages[voltrobImageDirectory].height * scaling;
+			drawImage(voltrobImages[voltrobImageDirectory], voltrobs[i].X, voltrobs[i].Y, width, height);
 		}
-		else {
-			if (hurdleDelay2 == 0) {
-				if (attemptHurdleGeneration()) hurdleDelay1 = hurdleDelay;
-			}
-			else hurdleDelay2--;
+		drawImage(playerImages[playerImageDirectory], playerLocation.x, playerY, playerWidth, playerHeight);
+		if (win) {
+			context.globalAlpha = 0.3;
+			fillRect(0, 0, canvasWidth, canvasHeight);
+			context.globalAlpha = 1.0;
+			
+			var youWinX = (canvasWidth - imgYouWin.width) / 2;
+			var youWinY = (canvasHeight - imgYouWin.height) / 2;
+			drawImage(imgYouWin, youWinX, youWinY);
 		}
+		
+		// Update game stats
+		var string = "Hits: " + hits + gameStatsSeparator + "Score: " + score;
+		if (win) string += gameStatsSeparator + "Press Enter to restart";
+		gameStats.innerHTML = string;
+		
+		requestAnimationFrame(timerTick);
 	}
-	
-	// Drawing
-	var backgroundX = backgroundMovement - (tileSize * 2);
-	var backgroundWidth = imgBackground.width * scaling;
-	var backgroundHeight = imgBackground.height * scaling;
-	var playerImageDirectory = (invincibleTime > invinTime * 0.75) ? 4 : parseInt((backgroundMovement % tileSize) / (tileSize / (playerImages.length - 1)));
-	var playerY = playerLocation.y - (playerImages[playerImageDirectory].height * scaling);
-	var playerWidth = playerImages[playerImageDirectory].width * scaling;
-	var playerHeight = playerImages[playerImageDirectory].height * scaling;
-	var voltrobImageDirectory = parseInt((backgroundMovement % tileSize) / (tileSize / voltrobImages.length));
-	drawImage(imgBackground, backgroundX, 0, backgroundWidth, backgroundHeight);
-	for (var i = 0; i < bushes.length; i++) drawImage(imgBush, bushes[i].X, bushes[i].Y, imgBush.width * scaling, imgBush.height * scaling);
-	for (var i = 0; i < rocks.length; i++) drawImage(imgRock, rocks[i].X, rocks[i].Y, imgRock.width * scaling, imgRock.height * scaling);
-	for (var i = 0; i < voltrobs.length; i++) {
-		var width = voltrobImages[voltrobImageDirectory].width * scaling;
-		var height = voltrobImages[voltrobImageDirectory].height * scaling;
-		drawImage(voltrobImages[voltrobImageDirectory], voltrobs[i].X, voltrobs[i].Y, width, height);
-	}
-	drawImage(playerImages[playerImageDirectory], playerLocation.x, playerY, playerWidth, playerHeight);
-	
-	// Update game stats
-	gameStats.innerHTML = "Hits: " + hits + " | Score: " + score;
-	
-	requestAnimationFrame(timerTick);
 }
 
 function keyDown (e) {
@@ -327,8 +358,13 @@ function keyUp (e) {
 }
 
 function toggleKeyInput (key, bool) {
+	console.log(key);
 	switch (key) {
 		case 13:	// Enter
+			if (win) {
+				initGame();
+				requestAnimationFrame(timerTick);
+			}
 			break;
 		case 38:	// Up
 			inputKeyUp = bool;
@@ -337,7 +373,6 @@ function toggleKeyInput (key, bool) {
 			inputKeyDown = bool;
 			break;
 		case 88:	// X
-			inputKeyX = bool;
 			break;
 		default:
 			break;
