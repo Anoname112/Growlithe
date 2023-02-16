@@ -33,6 +33,7 @@ var hurdleDelay1;
 var hurdleDelay2;
 var hits;
 var score;
+var start;
 var win;
 
 // inputs
@@ -123,6 +124,10 @@ function attemptHurdleGeneration () {
 function init () {
 	initDocument();
 	initGame();
+	
+	start = false;
+	message = "CLICK TO START PLAYING";
+	drawMessage(message, (canvas.width - (message.length * 8)) / 2, (canvas.height - bodyFontSize) / 2);
 	
 	var contentLoaded = false;
 	while (!contentLoaded) {
@@ -231,7 +236,7 @@ function restartGame () {
 }
 
 function timerTick () {
-	if (!win) {
+	if (!win && start) {
 		// Game movements
 		if (invincibleTime > 0) invincibleTime--;
 		else score += 1;
@@ -353,9 +358,9 @@ function timerTick () {
 		var string = "Hits: " + hits + gameStatsSeparator + "Score: " + score;
 		if (win) string += gameStatsSeparator + "Press Enter to restart";
 		gameStats.innerHTML = string;
-		
-		requestAnimationFrame(timerTick);
 	}
+	
+	requestAnimationFrame(timerTick);
 }
 
 function arrowUpMouseDown (e) {
@@ -382,6 +387,7 @@ function touchStart (e) {
 
 function touchEnd (e) {
 	inputMouseUp = inputMouseDown = false;
+	if (!start) start = true;
 	if (win) restartGame();
 }
 
@@ -396,6 +402,7 @@ function onKeyUp (e) {
 function toggleKeyInput (key, bool) {
 	switch (key) {
 		case 13:	// Enter
+			if (!start) start = true;
 			if (win) restartGame();
 			break;
 		case 38:	// Up
@@ -412,6 +419,7 @@ function toggleKeyInput (key, bool) {
 }
 
 function onMouseUp (e) {
+	if (!start) start = true;
 	if (win) restartGame();
 }
 
