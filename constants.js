@@ -1,6 +1,9 @@
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const isPortrait = window.innerWidth < window.innerHeight;
+
 const interval = 10;
 const gSpeed = 3;
-const scaling = 3;
+const scaling = isMobile ? 2.5 : 3;
 const tileSize = 16 * scaling;
 const tileWidth = 11;
 const tileHeight = 8;
