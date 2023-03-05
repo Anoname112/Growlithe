@@ -8,6 +8,6 @@
 	user-select: none;
 }
 
-#arrowUp:hover #arrowDown:hover {
+#arrowUp:hover, #arrowDown:hover {
 	cursor: pointer;
 }
