@@ -7,3 +7,7 @@
 	-o-user-select: none;
 	user-select: none;
 }
+
+#arrowup:hover #arrowdown:hover {
+	cursor: pointer;
+}
