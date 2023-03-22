@@ -1,8 +1,9 @@
 var canvas;
 var control;
+var control;
 var arrowUp;
 var arrowDown;
-var context;
+var ctx;
 var hidden;
 var bgm;
 var cry;
@@ -66,20 +67,22 @@ function newImg (path) {
 }
 
 function fillRect (x, y, w, h, s) {
-	context.fillStyle = s == null ? "#000" : s;
-	context.fillRect(x, y, w, h);
+	ctx.fillStyle = s == null ? "#000" : s;
+	ctx.fillRect(x, y, w, h);
 }
 
 function drawImage (img, x, y, w, h) {
 	w = (w == null) ? img.width : w;
 	h = (h == null) ? img.height : h;
-	context.drawImage(img, x, y, w, h);
+	ctx.drawImage(img, x, y, w, h);
 }
 
-function drawMessage (msg, x, y) {
-	context.font = bodyFont;
-	context.fillStyle = "#000";
-	context.fillText(msg, x, y + bodyFontSize);
+function drawMessage (msg, x, y, align) {
+	ctx.textAlign = (align == null) ? "start" : align;
+	ctx.font = bodyFont;
+	ctx.fillStyle = "#000";
+	ctx.fillText(msg, x, y + bodyFontSize);
+	ctx.textAlign = "start";
 }
 
 function playAudio (audio) {
@@ -155,8 +158,8 @@ function initDocument () {
 	canvas.width = canvasWidth;
 	canvas.height = canvasHeight;
 	updateCanvasLocation();
-	context = canvas.getContext("2d");
-	context.imageSmoothingEnabled = false;
+	ctx = canvas.getContext("2d");
+	ctx.imageSmoothingEnabled = false;
 	
 	control = document.getElementById("control");
 	control.style.position = controlPosition;
@@ -294,7 +297,6 @@ function timerTick () {
 			}
 		}
 		
-		
 		// Delete objects
 		for (var i = 0; i < bushes.length; i++) if (bushes[i].X > canvasWidth) bushes.splice(i, 1);
 		for (var i = 0; i < rocks.length; i++) if (rocks[i].X > canvasWidth) rocks.splice(i, 1);
@@ -344,9 +346,9 @@ function timerTick () {
 		}
 		drawImage(playerImages[playerImageDirectory], playerLocation.x, playerY, playerWidth, playerHeight);
 		if (win) {
-			context.globalAlpha = 0.3;
+			ctx.globalAlpha = 0.3;
 			fillRect(0, 0, canvasWidth, canvasHeight);
-			context.globalAlpha = 1.0;
+			ctx.globalAlpha = 1.0;
 			
 			var youWinWidth = imgYouWin.width * scaling / pcScaling;
 			var youWinHeight = imgYouWin.height * scaling / pcScaling;
