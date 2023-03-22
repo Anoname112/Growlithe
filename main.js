@@ -129,7 +129,7 @@ function init () {
 	
 	start = false;
 	message = "CLICK OR PRESS ENTER TO START PLAYING";
-	drawMessage(message, (canvas.width - (message.length * 8)) / 2, (canvas.height - bodyFontSize) / 2);
+	drawMessage(message, canvas.width / 2, (canvas.height - bodyFontSize) / 2, "center");
 	
 	var contentLoaded = false;
 	while (!contentLoaded) {
