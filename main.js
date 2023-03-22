@@ -1,9 +1,8 @@
 var canvas;
-var control;
+var ctx;
 var control;
 var arrowUp;
 var arrowDown;
-var ctx;
 var hidden;
 var bgm;
 var cry;
