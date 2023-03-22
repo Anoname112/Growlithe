@@ -7,18 +7,6 @@ var hidden;
 var bgm;
 var cry;
 
-var images = [];
-var imgBackground = newImg("resources/background.png");
-var imgStand = newImg("resources/stand.png");
-var imgMove1 = newImg("resources/move1.png");
-var imgMove2 = newImg("resources/move2.png");
-var imgHurt = newImg("resources/hurt.png");
-var imgBush = newImg("resources/bush.png");
-var imgRock = newImg("resources/rock.png");
-var imgVoltrobLeft = newImg("resources/voltrob_left.png");
-var imgVoltrobRight = newImg("resources/voltrob_right.png");
-var imgControl = newImg("resources/control.png");
-var imgYouWin = newImg("resources/you_win.png");
 var playerImages;
 var voltrobImages;
 
@@ -42,56 +30,6 @@ var inputKeyDown;
 var inputKeyX;
 var inputMouseUp;
 var inputMouseDown;
-
-function updateCanvasLocation () {
-	canvas.style.left = (window.innerWidth - canvas.width) / 2;
-	canvas.style.top = (window.innerHeight - canvas.height) / 2;
-}
-
-function updateControlLocation () {
-	control.style.left = (window.innerWidth + canvas.width) / 2;
-	control.style.top = (window.innerHeight - canvas.height) / 2;
-}
-
-function updateGameStatsLocation () {
-	gameStats.style.left = (window.innerWidth - canvas.width) / 2;
-	gameStats.style.top = (window.innerHeight - canvas.height) / 2 - gameStatsHeight;
-}
-
-function newImg (path) {
-	var tempImg = new Image;
-	tempImg.src = path;
-	images.push(tempImg);
-	return tempImg;
-}
-
-function fillRect (x, y, w, h, s) {
-	ctx.fillStyle = s == null ? "#000" : s;
-	ctx.fillRect(x, y, w, h);
-}
-
-function drawImage (img, x, y, w, h) {
-	w = (w == null) ? img.width : w;
-	h = (h == null) ? img.height : h;
-	ctx.drawImage(img, x, y, w, h);
-}
-
-function drawMessage (msg, x, y, align) {
-	ctx.textAlign = (align == null) ? "start" : align;
-	ctx.font = bodyFont;
-	ctx.fillStyle = "#000";
-	ctx.fillText(msg, x, y + bodyFontSize);
-	ctx.textAlign = "start";
-}
-
-function playAudio (audio) {
-	audio.currentTime = 0;
-	audio.play();
-}
-
-function floorTen (x) {
-	return Math.floor(x / 10) * 10;
-}
 
 function attemptHurdleGeneration () {
 	var generated = false;

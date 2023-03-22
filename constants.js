@@ -48,3 +48,16 @@ const audioVisibility = "hidden";
 
 const bgmPath = "resources/bgm.mp3";
 const cryPath = "resources/058.ogx";
+
+const images = [];
+const imgBackground = newImg("resources/background.png");
+const imgStand = newImg("resources/stand.png");
+const imgMove1 = newImg("resources/move1.png");
+const imgMove2 = newImg("resources/move2.png");
+const imgHurt = newImg("resources/hurt.png");
+const imgBush = newImg("resources/bush.png");
+const imgRock = newImg("resources/rock.png");
+const imgVoltrobLeft = newImg("resources/voltrob_left.png");
+const imgVoltrobRight = newImg("resources/voltrob_right.png");
+const imgControl = newImg("resources/control.png");
+const imgYouWin = newImg("resources/you_win.png");
