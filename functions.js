@@ -21,7 +21,7 @@ function newImg (path) {
 }
 
 function fillRect (x, y, w, h, s) {
-	ctx.fillStyle = s == null ? "#000" : s;
+	ctx.fillStyle = s == null ? "#000000" : s;
 	ctx.fillRect(x, y, w, h);
 }
 
@@ -34,7 +34,7 @@ function drawImage (img, x, y, w, h) {
 function drawMessage (msg, x, y, align) {
 	ctx.textAlign = (align == null) ? "start" : align;
 	ctx.font = bodyFont;
-	ctx.fillStyle = "#000";
+	ctx.fillStyle = "#000000";
 	ctx.fillText(msg, x, y + bodyFontSize);
 	ctx.textAlign = "start";
 }
