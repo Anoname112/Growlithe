@@ -82,6 +82,7 @@ function init () {
 }
 
 function initDocument () {
+	document.body.style.margin = bodyMargin;
 	document.body.style.background = bodyBackColor;
 	document.body.style.color = bodyTextColor;
 	document.body.style.font = bodyFont;
