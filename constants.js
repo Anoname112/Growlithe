@@ -17,6 +17,7 @@ const hurdleGenerationRate = 0.2;
 const hitPenalty = 500;
 const winScore = 2000;
 
+const bodyMargin = "0";
 const bodyBackColor = "#222222";
 const bodyTextColor = "#000000";
 const bodyFontSize = 15;
