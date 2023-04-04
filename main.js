@@ -23,6 +23,7 @@ var hits;
 var score;
 var start;
 var win;
+var intervalId;
 
 // inputs
 var inputKeyUp;
@@ -76,7 +77,7 @@ function init () {
 			if (!images[i].complete) contentLoaded = false;
 		}
 		if (contentLoaded) {
-			setInterval(timerTick, interval);
+			intervalId = setInterval(timerTick, interval);
 		}
 	}
 }
