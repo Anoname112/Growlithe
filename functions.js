@@ -1,3 +1,7 @@
+function getElement (id) {
+	return document.getElementById(id);
+}
+
 function updateCanvasLocation () {
 	canvas.style.left = (window.innerWidth - canvas.width) / 2;
 	canvas.style.top = (window.innerHeight - canvas.height) / 2;

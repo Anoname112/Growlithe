@@ -1,3 +1,9 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #222222;
+	color: #000000;
+}
 
 .container {
 	position: absolute;
@@ -10,6 +16,8 @@
 
 #myCanvas {
 	grid-area: canvas;
+	border-radius: 0;
+	background-color: #EEEEEE;
 }
 
 #control {
@@ -24,7 +32,9 @@
 	-ms-user-select: none;
 	-o-user-select: none;
 	user-select: none;
+	position: fixed;
 	padding: 3px;
+	background-color: #F2F2F2;
 }
 
 #arrowUp:hover, #arrowDown:hover {

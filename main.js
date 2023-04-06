@@ -10,20 +10,21 @@ var cry;
 var playerImages;
 var voltrobImages;
 
+var intervalId;
+var start;
+var win;
+var hits;
+var score;
 var invincibleTime;
 var gameSpeed;
 var backgroundMovement;
 var playerLocation;
+var hurdleDelay1;
+var hurdleDelay2;
+
 var bushes;
 var rocks;
 var voltrobs;
-var hurdleDelay1;
-var hurdleDelay2;
-var hits;
-var score;
-var start;
-var win;
-var intervalId;
 
 // inputs
 var inputKeyUp;
@@ -32,34 +33,20 @@ var inputKeyX;
 var inputMouseUp;
 var inputMouseDown;
 
-function attemptHurdleGeneration () {
-	var generated = false;
-	if (Math.random() < hurdleGenerationRate) {
-		generated = true;
-		var randomizer = Math.floor(Math.random() * 10) + 1;
-		var y = Math.floor(Math.random() * laneCount) + laneY;
-		switch (randomizer) {
-			case 1:
-			case 2:
-			case 3:
-				// Generate a Voltrob
-				voltrobs.push(Object.Voltrob(-2, y));
-				break;
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-			case 10:
-				// Generate an rock
-				rocks.push(Object.Rock(-2, y));
-				break;
-			default:
-				break;
-		}
-	}
-	return generated;
+window.onload = function () {
+	window.oncontextmenu = onContextMenu;
+	window.onresize = onResize;
+	window.onkeydown = onKeyDown;
+	window.onkeyup = onKeyUp;
+	window.onblur = function () {
+		//if (gState < 2) pause();
+	};
+	window.addEventListener("touchstart", onMouseDown, false);
+	window.addEventListener("touchend", onMouseUp, false);
+	window.onmousedown = onMouseDown;
+	window.onmouseup = onMouseUp;
+	
+	init();
 }
 
 function init () {
@@ -83,54 +70,44 @@ function init () {
 }
 
 function initDocument () {
-	document.body.style.margin = bodyMargin;
-	document.body.style.background = bodyBackColor;
-	document.body.style.color = bodyTextColor;
 	document.body.style.font = bodyFont;
-	document.body.addEventListener("touchstart", touchStart, false);
-	document.body.addEventListener("touchend", touchEnd, false);
 	
-	canvas = document.getElementById("myCanvas");
-	canvas.style.background = canvasBackColor;
-	canvas.style.borderRadius = canvasBorderRadius;
+	canvas = getElement("myCanvas");
 	canvas.width = canvasWidth;
 	canvas.height = canvasHeight;
 	updateCanvasLocation();
 	ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
 	
-	control = document.getElementById("control");
+	control = getElement("control");
 	control.width = controlWidth;
 	control.height = controlHeight;
 	updateControlLocation();
 	
-	arrowUp = document.getElementById("arrowUp");
+	arrowUp = getElement("arrowUp");
 	arrowUp.onmousedown = arrowUpMouseDown;
 	arrowUp.onmouseup = arrowUpMouseUp;
 	arrowUp.innerHTML = arrowUpSvg;
 	
-	arrowDown = document.getElementById("arrowDown");
+	arrowDown = getElement("arrowDown");
 	arrowDown.onmousedown = arrowDownMouseDown;
 	arrowDown.onmouseup = arrowDownMouseUp;
 	arrowDown.innerHTML = arrowDownSvg;
 	
-	gameStats = document.getElementById("gameStats");
-	gameStats.style.background = gameStatsBackColor;
-	gameStats.style.position = gameStatsPosition;
-	gameStats.style.visibility = gameStatsVisibility;
+	gameStats = getElement("gameStats");
 	updateGameStatsLocation();
 	
-	hidden = document.getElementById("hiddenArea");
+	hidden = getElement("hiddenArea");
 	hidden.style.visibility = "hidden";
 	hidden.innerHTML += "<audio id=\"bgm\" autoplay loop><source src=\"" + bgmPath + "\" /></audio>";
 	hidden.innerHTML += "<audio id=\"cry\"><source src=\"" + cryPath + "\" /></audio>";
-	bgm = document.getElementById("bgm");
+	bgm = getElement("bgm");
 	bgm.style.visibility = audioVisibility;
 	bgm.addEventListener('ended', function () {
 		this.currentTime = 0;
 		this.play();
 	}, false);
-	cry = document.getElementById("cry");
+	cry = getElement("cry");
 	cry.style.visibility = audioVisibility;
 }
 
@@ -168,8 +145,110 @@ function initGame () {
 	hurdleDelay2 = 0;
 }
 
+function onContextMenu (e) {
+	e.preventDefault();
+}
+
+function onResize () {
+	updateCanvasLocation();
+	updateControlLocation();
+	updateGameStatsLocation();
+}
+
+function onKeyDown (e) {
+	toggleKeyInput(e.keyCode, true);
+}
+
+function onKeyUp (e) {
+	toggleKeyInput(e.keyCode, false);
+}
+
+function toggleKeyInput (key, bool) {
+	switch (key) {
+		case 13:	// Enter
+			if (!start) {
+				start = true;
+				bgm.play();
+			}
+			if (win) restartGame();
+			break;
+		case 38:	// Up
+			inputKeyUp = bool;
+			break;
+		case 40:	// Down
+			inputKeyDown = bool;
+			break;
+		case 88:	// X
+			break;
+		default:
+			break;
+	}
+}
+
+function onMouseDown (e) {
+	console.log('here');
+	var controlCanvasY = e.clientY;
+	if (controlCanvasY < window.innerHeight / 2) inputMouseUp = true;
+	else inputMouseDown = true;
+}
+
+function onMouseUp (e) {
+	inputMouseUp = inputMouseDown = false;
+	if (!start) {
+		start = true;
+		bgm.play();
+	}
+	if (win) restartGame();
+}
+
+function arrowUpMouseDown (e) {
+	inputMouseUp = true;
+}
+
+function arrowUpMouseUp (e) {
+	inputMouseUp = false;
+}
+
+function arrowDownMouseDown (e) {
+	inputMouseDown = true;
+}
+
+function arrowDownMouseUp (e) {
+	inputMouseDown = false;
+}
+
 function restartGame () {
 	initGame();
+}
+
+function attemptHurdleGeneration () {
+	var generated = false;
+	if (Math.random() < hurdleGenerationRate) {
+		generated = true;
+		var randomizer = Math.floor(Math.random() * 10) + 1;
+		var y = Math.floor(Math.random() * laneCount) + laneY;
+		switch (randomizer) {
+			case 1:
+			case 2:
+			case 3:
+				// Generate a Voltrob
+				voltrobs.push(Object.Voltrob(-2, y));
+				break;
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+				// Generate an rock
+				rocks.push(Object.Rock(-2, y));
+				break;
+			default:
+				break;
+		}
+	}
+	return generated;
 }
 
 function timerTick () {
@@ -297,88 +376,4 @@ function timerTick () {
 		if (win) string += gameStatsSeparator + "Press Enter to restart";
 		gameStats.innerHTML = string;
 	}
-}
-
-function arrowUpMouseDown (e) {
-	inputMouseUp = true;
-}
-
-function arrowUpMouseUp (e) {
-	inputMouseUp = false;
-}
-
-function arrowDownMouseDown (e) {
-	inputMouseDown = true;
-}
-
-function arrowDownMouseUp (e) {
-	inputMouseDown = false;
-}
-
-function touchStart (e) {
-	var controlCanvasY = e.touches[0].pageY;
-	if (controlCanvasY < window.innerHeight / 2) inputMouseUp = true;
-	else inputMouseDown = true;
-}
-
-function touchEnd (e) {
-	inputMouseUp = inputMouseDown = false;
-	if (!start) {
-		start = true;
-		bgm.play();
-	}
-	if (win) restartGame();
-}
-
-function onKeyDown (e) {
-	toggleKeyInput(e.keyCode, true);
-}
-
-function onKeyUp (e) {
-	toggleKeyInput(e.keyCode, false);
-}
-
-function toggleKeyInput (key, bool) {
-	switch (key) {
-		case 13:	// Enter
-			if (!start) {
-				start = true;
-				bgm.play();
-			}
-			if (win) restartGame();
-			break;
-		case 38:	// Up
-			inputKeyUp = bool;
-			break;
-		case 40:	// Down
-			inputKeyDown = bool;
-			break;
-		case 88:	// X
-			break;
-		default:
-			break;
-	}
-}
-
-function onMouseUp (e) {
-	if (!start) {
-		start = true;
-		bgm.play();
-	}
-	if (win) restartGame();
-}
-
-function onResize () {
-	updateCanvasLocation();
-	updateControlLocation();
-	updateGameStatsLocation();
-}
-
-window.onload = function () {
-	window.onkeydown = onKeyDown;
-	window.onkeyup = onKeyUp;
-	window.onmouseup = onMouseUp;
-	window.onresize = onResize;
-	
-	init();
 }
