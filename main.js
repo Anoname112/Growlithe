@@ -92,7 +92,6 @@ function initDocument () {
 	
 	canvas = document.getElementById("myCanvas");
 	canvas.style.background = canvasBackColor;
-	canvas.style.position = canvasPosition;
 	canvas.style.borderRadius = canvasBorderRadius;
 	canvas.width = canvasWidth;
 	canvas.height = canvasHeight;
@@ -101,7 +100,6 @@ function initDocument () {
 	ctx.imageSmoothingEnabled = false;
 	
 	control = document.getElementById("control");
-	control.style.position = controlPosition;
 	control.width = controlWidth;
 	control.height = controlHeight;
 	updateControlLocation();
@@ -117,8 +115,6 @@ function initDocument () {
 	arrowDown.innerHTML = arrowDownSvg;
 	
 	gameStats = document.getElementById("gameStats");
-	gameStats.style.padding = gameStatsPadding;
-	gameStats.style.border = gameStatsBorder;
 	gameStats.style.background = gameStatsBackColor;
 	gameStats.style.position = gameStatsPosition;
 	gameStats.style.visibility = gameStatsVisibility;

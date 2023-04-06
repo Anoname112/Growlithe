@@ -17,19 +17,20 @@ const hurdleGenerationRate = 0.2;
 const hitPenalty = 500;
 const winScore = 2000;
 
+// Body
 const bodyMargin = "0";
 const bodyBackColor = "#222222";
 const bodyTextColor = "#000000";
 const bodyFontSize = 15;
 const bodyFont = bodyFontSize + "px Consolas";
 
+// Canvas
 const canvasBorderRadius = 0;
 const canvasBackColor = "#EEEEEE";
-const canvasPosition = "fixed";
 const canvasWidth = tileSize * tileWidth;
 const canvasHeight = tileSize * tileHeight;
 
-const controlPosition = "fixed";
+// Control
 const controlWidth = canvasHeight / 2;
 const controlHeight = canvasHeight;
 const arrowColor = "#F2F2F2";
@@ -38,15 +39,12 @@ const arrowDownSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + control
 
 const gameStatsBackColor = "#F2F2F2";
 const gameStatsPosition = "fixed";
-const gameStatsWidth = canvasWidth;
 const gameStatsHeight = 23;
-const gameStatsPadding = 3;
-const gameStatsBorder = "1px solid #AAAAAA";
 const gameStatsVisibility = "visible";
 const gameStatsSeparator = " | ";
 
+// Sound
 const audioVisibility = "hidden";
-
 const bgmPath = "resources/bgm.mp3";
 const cryPath = "resources/058.ogx";
 
