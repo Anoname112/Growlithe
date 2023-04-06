@@ -67,7 +67,7 @@ function init () {
 	initGame();
 	
 	start = false;
-	message = "CLICK OR PRESS ENTER TO START PLAYING";
+	message = "PRESS ENTER TO START PLAYING";
 	drawMessage(message, canvas.width / 2, (canvas.height - bodyFontSize) / 2, "center");
 	
 	var contentLoaded = false;
