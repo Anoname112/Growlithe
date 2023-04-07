@@ -187,8 +187,7 @@ function toggleKeyInput (key, bool) {
 }
 
 function onMouseDown (e) {
-	console.log('here');
-	var controlCanvasY = e.clientY;
+	var controlCanvasY = e.clientY ? e.clientY : e.touches[0].clientY; 
 	if (controlCanvasY < window.innerHeight / 2) inputMouseUp = true;
 	else inputMouseDown = true;
 }
