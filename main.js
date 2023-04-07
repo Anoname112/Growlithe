@@ -7,9 +7,6 @@ var hidden;
 var bgm;
 var cry;
 
-var playerImages;
-var voltrobImages;
-
 var intervalId;
 var start;
 var win;
@@ -22,11 +19,15 @@ var playerLocation;
 var hurdleDelay1;
 var hurdleDelay2;
 
+// Objects
 var bushes;
 var rocks;
 var voltrobs;
 
-// inputs
+var playerImages;
+var voltrobImages;
+
+// Inputs
 var inputKeyUp;
 var inputKeyDown;
 var inputKeyX;
